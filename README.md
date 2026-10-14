@@ -44,8 +44,8 @@ The COPR currently builds for Fedora 44 and newer. On Fedora 43, use the RPM fro
 
 Download the `.rpm` for your Fedora version from [GitHub Releases](https://github.com/linuxgamerlife/lgl-scheduler-manager/releases) and double-click to install via Discover.
 
--  `lgl-scheduler-manager-1.1.1-1.fc43.x86_64.rpm` — Fedora 43
--  `lgl-scheduler-manager-1.1.1-1.fc44.x86_64.rpm` — Fedora 44
+-  `lgl-scheduler-manager-1.1.1-2.fc43.x86_64.rpm` — Fedora 43
+-  `lgl-scheduler-manager-1.1.1-2.fc44.x86_64.rpm` — Fedora 44
 
 > After installing from Discover, close it and launch the app from your application menu rather than from the Discover install screen.
 

@@ -1060,9 +1060,9 @@ void MainWindow::showAbout() {
     QMessageBox about(this);
     about.setWindowTitle("About LGL SCX Scheduler Manager");
     about.setTextFormat(Qt::RichText);
-    about.setText(
+    about.setText(QString(
         "<h3>LGL SCX Scheduler Manager</h3>"
-        "<p style='color:gray;'>Version 1.1.0</p>"
+        "<p style='color:gray;'>Version %1</p>"
         "<p>A Qt6 GUI for managing sched-ext BPF schedulers.<br>"
         "Start, stop, and switch schedulers via <code>scxctl</code> and <code>scx_loader</code> "
         "without touching the terminal.</p>"
@@ -1079,7 +1079,7 @@ void MainWindow::showAbout() {
         "<p><a href='https://github.com/sched-ext/scx'>sched-ext upstream</a> &nbsp;|&nbsp; "
         "<a href='https://wiki.cachyos.org'>CachyOS wiki</a></p>"
         "<p style='color:gray; font-size:small;'>Released under the MIT licence. Use at your own risk.</p>"
-    );
+    ).arg(QApplication::applicationVersion()));
     about.exec();
 }
 

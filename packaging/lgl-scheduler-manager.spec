@@ -1,6 +1,6 @@
 Name:           lgl-scheduler-manager
 Version:        1.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Qt6 GUI for managing sched-ext BPF schedulers via scxctl
 
 License:        MIT
@@ -97,6 +97,9 @@ fi
 %{_datadir}/metainfo/com.linuxgamerlife.lgl-scheduler-manager.metainfo.xml
 
 %changelog
+* Wed Oct 14 2026 LinuxGamerLife <contact@linuxgamerlife.com> - 1.1.1-2
+- Fix the version shown in the About dialog
+
 * Wed Oct 14 2026 LinuxGamerLife <contact@linuxgamerlife.com> - 1.1.1-1
 - Add --start-minimized for desktop-session autostart
 

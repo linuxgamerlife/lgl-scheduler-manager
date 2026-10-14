@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - `--start-minimized` starts the app minimized to the system tray, for use in a desktop-session autostart entry
 
+### Fixed
+
+- The About dialog now shows the configured application version
+
 ## [1.1.0] - 2026-09-20
 
 ### Changed
