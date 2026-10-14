@@ -6,7 +6,7 @@ A Qt6 GUI application for managing sched-ext BPF schedulers via `scxctl`.
 
 > **Renamed:** this project was previously called `lgl-scxctl-manager`. From 1.1.0 the package, binary, desktop file and AppStream ID are `lgl-scheduler-manager`. Existing installs do not update automatically — see [Upgrading from lgl-scxctl-manager](#upgrading-from-lgl-scxctl-manager).
 
-![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 [![Fedora](https://img.shields.io/badge/Fedora-43%20%7C%2044-blue?logo=fedora&logoColor=white)](https://fedoraproject.org)
 
@@ -44,8 +44,8 @@ The COPR currently builds for Fedora 44 and newer. On Fedora 43, use the RPM fro
 
 Download the `.rpm` for your Fedora version from [GitHub Releases](https://github.com/linuxgamerlife/lgl-scheduler-manager/releases) and double-click to install via Discover.
 
--  `lgl-scheduler-manager-1.1.0-1.fc43.x86_64.rpm` — Fedora 43
--  `lgl-scheduler-manager-1.1.0-1.fc44.x86_64.rpm` — Fedora 44
+-  `lgl-scheduler-manager-1.1.1-1.fc43.x86_64.rpm` — Fedora 43
+-  `lgl-scheduler-manager-1.1.1-1.fc44.x86_64.rpm` — Fedora 44
 
 > After installing from Discover, close it and launch the app from your application menu rather than from the Discover install screen.
 
@@ -144,6 +144,16 @@ A filterable table of per-scheduler custom flags. Use the dropdown to narrow by 
 > ```
 >
 > Tested on Niri Noctalia. Other environments may differ.
+
+### Start Minimized at Login
+
+To start the app minimized when your desktop session starts, change the `Exec` line in the existing user autostart entry at `~/.config/autostart/lgl-scheduler-manager.desktop` to:
+
+```ini
+Exec=lgl-scheduler-manager --start-minimized
+```
+
+The application-menu launcher remains unchanged, so opening it normally still shows the window.
 
 ## Available Schedulers
 

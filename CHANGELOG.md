@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2026-10-14
+
+### Added
+
+- `--start-minimized` starts the app minimized to the system tray, for use in a desktop-session autostart entry
+
 ## [1.1.0] - 2026-09-20
 
 ### Changed

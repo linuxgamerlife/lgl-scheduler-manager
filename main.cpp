@@ -1,4 +1,6 @@
 #include <QApplication>
+#include <QCommandLineOption>
+#include <QCommandLineParser>
 #include <QIcon>
 #include <QLocalServer>
 #include <QLocalSocket>
@@ -9,8 +11,17 @@
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     app.setApplicationName("SCX Scheduler Manager");
-    app.setApplicationVersion("1.1.0");
+    app.setApplicationVersion("1.1.1");
     app.setOrganizationName("lgl-scheduler-manager");
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Manage sched-ext BPF schedulers via scxctl");
+    parser.addHelpOption();
+    parser.addVersionOption();
+    const QCommandLineOption startMinimizedOption(
+        "start-minimized", "Start with the main window minimized to the system tray.");
+    parser.addOption(startMinimizedOption);
+    parser.process(app);
 
     app.setWindowIcon(QIcon(":/packaging/hicolor/256x256/apps/lgl-scheduler-manager.png"));
     app.setQuitOnLastWindowClosed(false);
@@ -46,6 +57,9 @@ int main(int argc, char *argv[]) {
                  qPrintable(server.errorString()));
     }
 
-    w.show();
+    if (parser.isSet(startMinimizedOption))
+        w.showMinimized();
+    else
+        w.show();
     return app.exec();
 }

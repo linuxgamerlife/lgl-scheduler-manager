@@ -60,6 +60,11 @@
   </requires>
 
   <releases>
+    <release version="1.1.1" date="2026-10-14">
+      <description>
+        <p>Added an option to start minimized to the system tray when launched automatically with the desktop session.</p>
+      </description>
+    </release>
     <release version="1.1.0" date="2026-09-20">
       <description>
         <p>Project renamed from lgl-scxctl-manager to lgl-scheduler-manager. The binary, desktop file, icon, package name, and AppStream ID have changed accordingly.</p>
