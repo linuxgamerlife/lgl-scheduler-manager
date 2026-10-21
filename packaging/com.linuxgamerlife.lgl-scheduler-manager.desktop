@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=LGL SCX Scheduler Manager
+GenericName=Scheduler Manager
+Comment=Manage sched-ext BPF schedulers through scxctl
+Exec=lgl-scheduler-manager
+Icon=lgl-scheduler-manager
+Terminal=false
+StartupNotify=true
+Categories=System;
+Keywords=scheduler;sched-ext;scx;bpf;kernel;performance;gaming;

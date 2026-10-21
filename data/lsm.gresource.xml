@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/com/linuxgamerlife/lsm">
+    <file>style.css</file>
+    <file>lgl-scheduler-manager.png</file>
+    <file alias="HELP.md">../HELP.md</file>
+  </gresource>
+</gresources>

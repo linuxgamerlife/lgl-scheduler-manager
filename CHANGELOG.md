@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2026-10-21
+
+### Changed
+
+- Released the completed GTK 4 and gtkmm application as version 2.0.0
+- Published the package through the `linuxgamerlife/lgl-toolkit` COPR
+- Replaced the Qt 6 implementation with the maintained GTK application in `src/`
+
+### Added
+
+- Scheduler and custom-flag reference cards with complete copyable flag syntax
+- StatusNotifierItem tray menu with Status, Start, Stop, Show Window, and Quit
+- Menu keyboard toggles for F10 and Alt, including while the menu is open
+- Asynchronous command execution, bounded logs, settings, help, and title-bar modes
+- Unit tests for scheduler data, parsing, settings, theme helpers, and validation
+
+### Fixed
+
+- Avoid a GVariant ownership error when a tray host requests an unknown menu property
+- Release queued tray actions when their idle source is cancelled
+- Reject embedded NUL bytes in custom scheduler flags
+
+### Known issue
+
+- On some KWin Wayland sessions, the title-bar close button can ignore clicks after the window is restored from the tray. Maximizing and restoring the window makes the close button work for the rest of the application session. Restarting the application can bring the issue back.
+
+## [1.2.0] - 2026-10-21
+
+### Changed
+
+- Replaced the maintained Qt 6 application with a GTK 4 and gtkmm implementation
+- Moved active code into `src/`, resources into `data/`, and tests into `tests/`
+- Archived the Qt implementation under `legacy/qt/`
+- Adopted the shared LGL header, menu, title-bar, theme, notice, settings, and help conventions
+- Reworked command execution around asynchronous GIO subprocesses with output limits and timeouts
+- Updated RPM and COPR builds to use only GTK dependencies
+
+### Added
+
+- Unit tests for settings, theme helpers, `scxctl` parsing, and privileged-input validation
+- Application/system title-bar switching with **Ctrl+Shift+M**
+- Snapshot mode through `LSM_GTK_SNAPSHOT`
+
+### Fixed
+
+- Tray restoration now rebuilds the main-menu popover so its items remain usable
+- F10 and Alt now close the main menu as well as open it
+
 ## [1.1.1] - 2026-10-14
 
 ### Added
@@ -49,5 +97,5 @@ All notable changes to this project will be documented in this file.
 - Scheduler list populated dynamically from `scxctl list` with a built-in fallback if `scx_loader` is unavailable
 - Input validation on scheduler names and custom flags before passing to privileged commands
 - Application icon bundled into the binary via Qt resources
-- Uses the system Qt theme — respects the user's light or dark mode preference
+- Uses the system Qt theme - respects the user's light or dark mode preference
 - Built with C++20 and Qt6

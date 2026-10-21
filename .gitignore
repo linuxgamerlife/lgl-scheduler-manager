@@ -1,1 +1,36 @@
+# Build and packaging output
+build/
+build-*/
 rpmbuild/
+result/
+*.rpm
+*.src.rpm
+*.tar.gz
+
+# CMake output if configured in-source
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Testing/
+install_manifest.txt
+
+# Local tooling and editor state
+.cache/
+.clangd/
+compile_commands.json
+CMakeUserPresets.json
+.direnv/
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+
+# Logs and crash dumps
+*.log
+/core
+/core.*
+
+# Local handoff notes
+MEMORY.md

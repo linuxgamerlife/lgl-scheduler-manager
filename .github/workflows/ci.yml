@@ -1,0 +1,35 @@
+name: GTK build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: fedora:44
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: >-
+          dnf install -y cmake gcc-c++ gtkmm4.0-devel libadwaita-devel
+          json-glib-devel desktop-file-utils appstream rpm-build make
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
+      - name: Build
+        run: cmake --build build -j2
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+      - name: Validate metadata
+        run: |
+          desktop-file-validate packaging/com.linuxgamerlife.lgl-scheduler-manager.desktop
+          appstreamcli validate --no-net packaging/com.linuxgamerlife.lgl-scheduler-manager.metainfo.xml
+      - name: Check source archive
+        run: |
+          make archive
+          tar -tzf result/lgl-scheduler-manager-2.0.0.tar.gz | grep '/src/'
+          tar -tzf result/lgl-scheduler-manager-2.0.0.tar.gz | grep '/data/'
+          tar -tzf result/lgl-scheduler-manager-2.0.0.tar.gz | grep '/tests/'
+          if tar -tzf result/lgl-scheduler-manager-2.0.0.tar.gz | grep '/legacy/qt/'; then exit 1; fi

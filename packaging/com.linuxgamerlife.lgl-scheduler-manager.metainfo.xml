@@ -3,8 +3,8 @@
 
   <id>com.linuxgamerlife.lgl-scheduler-manager</id>
 
-  <name>SCX Scheduler Manager</name>
-  <summary>Qt6 GUI for managing sched-ext BPF schedulers via scxctl</summary>
+  <name>LGL SCX Scheduler Manager</name>
+  <summary>Manage sched-ext BPF schedulers through scxctl</summary>
 
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
@@ -12,7 +12,7 @@
   <description>
     <p>
       SCX Scheduler Manager is a graphical interface for managing sched-ext BPF
-      schedulers through the scxctl command-line tool — without touching the terminal.
+      schedulers through the scxctl command-line tool - without touching the terminal.
     </p>
     <p>
       Start, stop, and switch schedulers, view live scheduler status, manage
@@ -25,7 +25,11 @@
     </p>
   </description>
 
-  <launchable type="desktop-id">lgl-scheduler-manager.desktop</launchable>
+  <launchable type="desktop-id">com.linuxgamerlife.lgl-scheduler-manager.desktop</launchable>
+
+  <provides>
+    <id>lgl-scheduler-manager.desktop</id>
+  </provides>
 
   <url type="homepage">https://github.com/linuxgamerlife/lgl-scheduler-manager</url>
   <url type="bugtracker">https://github.com/linuxgamerlife/lgl-scheduler-manager/issues</url>
@@ -60,6 +64,27 @@
   </requires>
 
   <releases>
+    <release version="2.0.0" date="2026-10-21">
+      <description>
+        <p>Version 2.0.0 completes the GTK 4 release and publishes the application through the LGL Toolkit COPR.</p>
+        <ul>
+          <li>Redesigned scheduler and custom-flag cards with complete copyable syntax</li>
+          <li>StatusNotifierItem tray menu and refreshed window restoration behavior</li>
+          <li>F10 and Alt menu toggles, help, settings, and title-bar modes</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.2.0" date="2026-10-21">
+      <description>
+        <p>The maintained application has moved from Qt 6 to GTK 4.</p>
+        <ul>
+          <li>New GTK interface that follows the desktop theme and accent colour</li>
+          <li>Application and system title-bar modes</li>
+          <li>Keyboard-accessible main menu, help, and standard shortcuts</li>
+          <li>Tested core parsing, validation, theme, and settings logic</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.1.1" date="2026-10-14">
       <description>
         <p>Added an option to start minimized to the system tray when launched automatically with the desktop session.</p>
@@ -92,7 +117,7 @@
           <li>Flags tab with filterable per-scheduler custom flags reference</li>
           <li>Setup tab shown when scxctl is not detected, with installation guidance</li>
           <li>System tray icon with colour-coded status indicator</li>
-          <li>Uses system Qt theme — respects light and dark mode</li>
+          <li>Uses system Qt theme - respects light and dark mode</li>
         </ul>
       </description>
     </release>

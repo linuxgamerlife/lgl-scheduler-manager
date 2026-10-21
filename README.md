@@ -1,187 +1,201 @@
-# LGL SCX Scheduler Manager
+<div align="center">
 
-A Qt6 GUI application for managing sched-ext BPF schedulers via `scxctl`.
+# LGL Scheduler Manager
 
-**USE AT YOUR OWN RISK**
+**A graphical way to manage sched-ext BPF schedulers on Fedora.**
 
-> **Renamed:** this project was previously called `lgl-scxctl-manager`. From 1.1.0 the package, binary, desktop file and AppStream ID are `lgl-scheduler-manager`. Existing installs do not update automatically — see [Upgrading from lgl-scxctl-manager](#upgrading-from-lgl-scxctl-manager).
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Release](https://img.shields.io/badge/release-2.0.0-purple)](CHANGELOG.md)
+[![Fedora](https://img.shields.io/badge/Fedora-44-blue?logo=fedora&logoColor=white)](https://fedoraproject.org)
+[![RPM](https://img.shields.io/badge/RPM-available-brightgreen?logo=redhat&logoColor=white)](https://github.com/linuxgamerlife/lgl-scheduler-manager/releases)
+[![GTK](https://img.shields.io/badge/GTK-4-green?logo=gtk&logoColor=white)](https://www.gtk.org)
+[![COPR](https://img.shields.io/badge/COPR-lgl--toolkit-blue?logo=fedora&logoColor=white)](https://copr.fedorainfracloud.org/coprs/linuxgamerlife/lgl-toolkit/)
+[![Support on Ko-fi](https://img.shields.io/badge/Support_on-Ko--fi-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/linuxgamerlife)
 
-![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)
-![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
-[![Fedora](https://img.shields.io/badge/Fedora-43%20%7C%2044-blue?logo=fedora&logoColor=white)](https://fedoraproject.org)
+</div>
 
-##   Features
+---
 
-- **Status tab** – live view of the running scheduler, mode, and service state; auto-refreshes every 5 seconds with change-detection (no log noise when idle)
-- **Control tab** – start, stop, or switch schedulers with a chosen mode/profile and optional custom flags
-- **Log tab** – timestamped output of all `scxctl` commands
-- **Reference tab** – descriptions of every scheduler and what workloads each is best suited to
-- **Flags tab** – filterable reference of per-scheduler custom flags with accepted values and descriptions
-- **System tray** – app icon with a colour-coded status badge (green = running, red = stopped) and quick start/stop actions
-- Polkit (`pkexec`) used for privilege elevation; `scxctl list` and `scxctl get` run without root
+## Overview
 
-## Prerequisites
+LGL Scheduler Manager is a GTK 4 desktop application for managing sched-ext BPF
+schedulers through `scxctl`. It provides a clear view of the running scheduler,
+safe start, stop, and switch controls, and a complete reference for scheduler
+modes and custom flags.
 
-### scx-tools (provides scxctl and scx_loader)
+- Start, stop, and switch schedulers without using the terminal
+- See the active scheduler, mode, service state, and tool availability
+- Browse per-scheduler guidance and copy complete custom-flag syntax
+- Keep a bounded command log with asynchronous execution and timeouts
+- Control `scx_loader.service` autostart from the Control tab
+- Hide the window to the system tray and restore it from the tray menu
+- Follow your GTK theme, dark mode, accent colour, and user CSS live
+
+> **Use at your own risk.** Starting, stopping, and switching kernel schedulers
+> changes system-level behaviour and requires Polkit authorization.
+
+---
+
+## How It Works
+
+1. Install `scx-tools` and `scx-scheds` for your kernel.
+2. Open the **Control** tab and select a scheduler and mode.
+3. Optional: open the **Flags** tab, filter by scheduler, and use **Copy syntax**
+   to copy an argument such as `--slice-us <microseconds>`.
+4. Choose **Start** or **Switch**. Administrative actions run through Polkit.
+5. Close the window to hide it in the system tray. Use the tray menu's
+   **Show Window** action to bring it back.
+
+The **Status** tab refreshes every five seconds. The **Reference** tab explains
+what each scheduler is best for and when to avoid it. The **Log** tab records
+commands and their output. If `scxctl` is not installed, the application opens
+the **Setup** tab with installation guidance instead of failing.
+
+---
+
+## Features
+
+| Feature | What it does |
+|---|---|
+| **Live status** | Shows the running scheduler, mode, service state, and available tools |
+| **Scheduler control** | Starts, stops, and switches schedulers with optional modes |
+| **Custom flags** | Shows complete syntax and copies paste-ready arguments |
+| **Scheduler reference** | Explains each scheduler's best use cases, limitations, and notes |
+| **Command log** | Records commands and output with bounded history and timeouts |
+| **Autostart control** | Enables or disables `scx_loader.service` on boot |
+| **System tray** | Provides Status, Start, Stop, Show Window, and Quit actions |
+| **Single instance** | Launching the app again restores the existing window |
+| **Theme support** | Follows GTK colours, dark mode, accent colour, fonts, and user CSS |
+| **Title-bar modes** | Switches between the app header bar and the system title bar |
+| **Keyboard access** | F10 and Alt toggle the main menu; F1 opens Help; F5 refreshes |
+| **Setup guidance** | Shows Fedora and upstream installation steps when `scxctl` is missing |
+| **Built-in help** | Documents controls, shortcuts, tray behavior, and setup |
+| **About dialog** | Shows version, project links, licence, and support information |
+
+---
+
+## Install
+
+The current release is **2.0.0**.
+
+LGL Scheduler Manager is part of the
+[LGL Toolkit COPR](https://copr.fedorainfracloud.org/coprs/linuxgamerlife/lgl-toolkit/).
+
+### Recommended - Fedora COPR
+
+Enable the LGL Toolkit COPR and install the application:
+
+```bash
+sudo dnf copr enable linuxgamerlife/lgl-toolkit
+sudo dnf install lgl-scheduler-manager
+```
+
+Install the scheduler tools from the CachyOS addons COPR:
 
 ```bash
 sudo dnf copr enable bieszczaders/kernel-cachyos-addons
 sudo dnf install scx-tools scx-scheds
 ```
 
-### Recommended — COPR
+Future releases will then be installed through normal Fedora system updates.
 
-Published in the LGL Toolkit COPR, alongside the other LGL tools:
+### Manual downloads
+
+RPM release artifacts are also available from
+[GitHub Releases](https://github.com/linuxgamerlife/lgl-scheduler-manager/releases).
+
+The project can also be built directly from source.
+
+---
+
+## What's New in 2.0.0
+
+- The maintained application is now a complete GTK 4 and gtkmm release
+- Published through the `linuxgamerlife/lgl-toolkit` COPR
+- Redesigned scheduler and custom-flag reference cards
+- Complete copyable flag syntax, including parameters and allowed values
+- StatusNotifierItem tray menu with Show Window and quick scheduler actions
+- F10 and Alt now close the main menu as well as open it
+- Asynchronous command execution, bounded logs, settings, help, and title-bar modes
+- Unit coverage for scheduler data, parsing, settings, theme helpers, and validation
+
+Earlier release notes are in [CHANGELOG.md](CHANGELOG.md).
+
+---
+
+## Known Issues
+
+### Close button after tray restoration on KWin Wayland
+
+On some KWin Wayland sessions, the title-bar close button can ignore clicks
+after restoring the window with the tray menu's **Show Window** action. The
+hamburger menu, tabs, and body controls remain usable.
+
+Workaround: double-click the title bar to maximize the window, then double-click
+again to restore it. The close button then works for the rest of the application
+session. Restarting the application can bring the issue back.
+
+This issue is tracked as a known bug and is under investigation.
+
+---
+
+## Build from Source
+
+LGL Scheduler Manager is a GTK 4 and libadwaita application built by the root
+CMake configuration. Its maintained code is in `src/`, resources in `data/`, and
+tests in `tests/`. It requires gtkmm 4.20, libadwaita 1.6, and JSON-GLib or newer.
+
+Install the dependencies on Fedora 44:
 
 ```bash
-sudo dnf copr enable linuxgamerlife/lgl-toolkit
-sudo dnf install lgl-scheduler-manager
+sudo dnf install cmake gcc-c++ gtkmm4.0-devel libadwaita-devel json-glib-devel
+sudo dnf copr enable bieszczaders/kernel-cachyos-addons
+sudo dnf install scx-tools scx-scheds
 ```
 
-The COPR currently builds for Fedora 44 and newer. On Fedora 43, use the RPM from GitHub Releases below.
-
-### RPM from Releases
-
-Download the `.rpm` for your Fedora version from [GitHub Releases](https://github.com/linuxgamerlife/lgl-scheduler-manager/releases) and double-click to install via Discover.
-
--  `lgl-scheduler-manager-1.1.1-2.fc43.x86_64.rpm` — Fedora 43
--  `lgl-scheduler-manager-1.1.1-2.fc44.x86_64.rpm` — Fedora 44
-
-> After installing from Discover, close it and launch the app from your application menu rather than from the Discover install screen.
-
-
-
-### Build dependencies
+Clone, build, and test:
 
 ```bash
-sudo dnf install cmake gcc-c++ qt6-qtbase-devel
-```
-
-## Building
-
-```bash
-git clone https://github.com/linuxgamerlife/lgl-scheduler-manager
+git clone https://github.com/linuxgamerlife/lgl-scheduler-manager.git
 cd lgl-scheduler-manager
-cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
 cmake --build build -j$(nproc)
+ctest --test-dir build --output-on-failure
 ```
 
-## Running
+Run it directly from the build directory:
 
 ```bash
 ./build/lgl-scheduler-manager
 ```
 
-A polkit agent must be running (e.g. `polkit-gnome-authentication-agent-1` or `lxqt-policykit-agent`).
-
-## Installing system-wide
+Install the uninstalled build with:
 
 ```bash
 sudo cmake --install build
 ```
 
-Installs the binary to `/usr/local/bin`, the `.desktop` file so it appears in your application launcher, and the icon set to `/usr/local/share/icons/hicolor`.
+The old Qt implementation is retained under `legacy/qt/` as read-only
+historical reference. It is not built, tested, packaged, or a runtime dependency.
 
-> Note: RPM installs place the binary in `/usr/bin`. The RPM can be uninstalled via your package manager.
+---
 
-## Uninstalling
+## Project Layout
 
-RPM install:
+- `src/` - maintained GTK application and widget-free core logic
+- `data/` - GResource manifest, CSS, and bundled artwork
+- `tests/` - GLib unit tests registered with CTest
+- `packaging/` - RPM spec, desktop entry, AppStream metadata, and icons
+- `legacy/qt/` - historical Qt implementation; not built or packaged
 
-```bash
-sudo dnf remove lgl-scheduler-manager
-```
+---
 
-Installed with `cmake --install` — run from the project directory, using the same `build` directory you installed from:
+## License
 
-```bash
-sudo xargs rm < build/install_manifest.txt
-```
+MIT - see [LICENSE](LICENSE) for details.
 
-## Upgrading from lgl-scxctl-manager
+---
 
-The package was renamed in 1.1.0 and moved to the LGL Toolkit COPR, so an existing `lgl-scxctl-manager` install is not upgraded in place. The old `lgl-scxctl-manager` COPR is deprecated and receives no further updates. To switch:
-
-```bash
-sudo dnf remove lgl-scxctl-manager
-sudo dnf copr remove linuxgamerlife/lgl-scxctl-manager
-sudo dnf copr enable linuxgamerlife/lgl-toolkit
-sudo dnf install lgl-scheduler-manager
-```
-
-The app stores no settings, so there is nothing to migrate.
-
-## Usage
-
-### Status Tab
-Shows the currently running scheduler, mode, and service state. The **Stop Scheduler** button is only enabled when a scheduler is actually running. Status auto-refreshes every 5 seconds.
-
-### Control Tab
-1. Select a scheduler from the dropdown (populated live via `scxctl list`)
-2. Choose a mode: **Auto**, **Gaming**, **Lowlatency**, or **Powersave**
-3. Optionally enter custom flags (see the Flags tab for reference)
-4. Click **Start** (when no scheduler is running) or **Switch** (to change the active one)
-5. Check **"Enable scx_loader service on boot"** to persist the service across reboots
-
-### Reference Tab
-A table of all supported schedulers with descriptions of what each is best for, what workloads to avoid, and technical notes.
-
-### Flags Tab
-A filterable table of per-scheduler custom flags. Use the dropdown to narrow by scheduler. Flags from this table can be pasted directly into the Custom flags field on the Control tab.
-
-### Tray Icon
-- Green badge on the app icon = scheduler running
-- Red badge = no scheduler active (grey until the first status check)
-- Closing the window minimises to tray — the app keeps running
-- Launching the app again while it is running just brings the existing window to the front
-- Click the icon to show/hide the window
-- Right-click for quick start/stop and **Quit** to exit fully
-
-> **Tray support on some desktop environments / window managers** (e.g. Niri, Noctalia): a StatusNotifierItem host may be required.
->
-> ```bash
-> sudo dnf install gnome-shell-extension-appindicator
-> ```
->
-> Tested on Niri Noctalia. Other environments may differ.
-
-### Start Minimized at Login
-
-To start the app minimized when your desktop session starts, change the `Exec` line in the existing user autostart entry at `~/.config/autostart/lgl-scheduler-manager.desktop` to:
-
-```ini
-Exec=lgl-scheduler-manager --start-minimized
-```
-
-The application-menu launcher remains unchanged, so opening it normally still shows the window.
-
-## Available Schedulers
-
-The scheduler list is populated dynamically from `scxctl list`. On a typical install this includes:
-
-| Scheduler         | Best for |
-|------------------|----------|
-| `scx_bpfland`     | General desktop, interactive apps — recommended default |
-| `scx_beerland`    | Like bpfland but lower overhead |
-| `scx_cake`        | CachyOS experimental — desktop/gaming |
-| `scx_cosmos`      | General desktop and server, locality-first |
-| `scx_flash`       | Batch jobs, compilation, encoding |
-| `scx_lavd`        | Gaming, audio, low-latency workloads |
-| `scx_layered`     | Power users wanting per-app scheduling policies |
-| `scx_nest`        | Lightly-loaded desktops, turbo-boost workloads |
-| `scx_p2dq`        | Mixed desktop/server, fair load balancing |
-| `scx_pandemonium` | CachyOS experimental — dynamic task learning |
-| `scx_rusty`       | Multi-core desktops and servers, NUMA systems |
-| `scx_rustland`    | Experimentation and userspace scheduler research |
-| `scx_simple`      | Testing and benchmarking only |
-| `scx_tickless`    | Cloud, virtualisation, HPC, server batch workloads |
-
-See the in-app **Reference** tab for full descriptions and the **Flags** tab for tuning options.
-
-## Notes
-
-- `scxctl start`, `scxctl stop`, and `scxctl switch` require root; the app uses `pkexec` for elevation
-- `scxctl list` and `scxctl get` run without root
-- Do **not** run `scx.service` and `scx_loader.service` simultaneously
-- Disable `ananicy-cpp` if you experience scheduler watchdog timeouts
-- If the scheduler list shows a built-in fallback, ensure `scx_loader.service` is running: `systemctl start scx_loader`
+<div align="center">
+Made for <a href="https://fedoraproject.org">Fedora</a> · by <a href="https://www.youtube.com/@linuxgamerlife">LinuxGamerLife</a>
+</div>

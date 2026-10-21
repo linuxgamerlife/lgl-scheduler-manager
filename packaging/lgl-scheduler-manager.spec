@@ -1,117 +1,90 @@
 Name:           lgl-scheduler-manager
-Version:        1.1.1
-Release:        2%{?dist}
-Summary:        Qt6 GUI for managing sched-ext BPF schedulers via scxctl
+Version:        2.0.0
+Release:        1%{?dist}
+Summary:        GTK interface for managing sched-ext BPF schedulers
 
 License:        MIT
 URL:            https://github.com/linuxgamerlife/lgl-scheduler-manager
-Source0:        https://github.com/linuxgamerlife/%{name}/archive/refs/tags/v%{version}.zip
-BuildRequires:  cmake >= 3.16
-BuildRequires:  unzip
+Source0:        %{name}-%{version}.tar.gz
+
+BuildRequires:  cmake >= 3.20
 BuildRequires:  gcc-c++
-BuildRequires:  qt6-qtbase-devel
-Requires:       qt6-qtbase
+BuildRequires:  pkgconfig(gtkmm-4.0) >= 4.20
+BuildRequires:  pkgconfig(libadwaita-1) >= 1.6
+BuildRequires:  pkgconfig(json-glib-1.0)
+BuildRequires:  desktop-file-utils
+BuildRequires:  appstream
 Requires:       polkit
-# scx-tools is detected at runtime — the app shows a setup guide if absent
 Recommends:     scx-tools
 Recommends:     scx-scheds
 
 %description
-SCX Scheduler Manager is a Qt6 graphical interface for managing sched-ext
-BPF schedulers through the scxctl command-line tool.
-
-It allows starting, stopping, and switching schedulers, viewing live
-scheduler status, managing scx_loader.service autostart, and browsing
-per-scheduler flags and workload reference data.
-
-If scxctl is not installed, the application opens in setup mode and
-displays installation guidance without hard-failing.
+LGL SCX Scheduler Manager is a GTK 4 graphical interface for viewing, starting,
+stopping, and switching sched-ext BPF schedulers through scxctl. It also provides
+scheduler and custom-flag reference information.
 
 %prep
-%autosetup -n %{name}-%{version}
+%autosetup
 
 %build
-mkdir -p build
-cd build
-cmake .. \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=%{_prefix}
-%make_build
+%cmake -DBUILD_TESTING=ON
+%cmake_build
+
+%check
+%ctest
 
 %install
-# Main binary
-install -Dm755 build/lgl-scheduler-manager \
-    %{buildroot}%{_bindir}/lgl-scheduler-manager
-
-# Desktop entry
-install -Dm644 lgl-scheduler-manager.desktop \
-    %{buildroot}%{_datadir}/applications/lgl-scheduler-manager.desktop
-
-# Icons (hicolor theme, one per size)
-for icon in packaging/hicolor/*/apps/%{name}.png; do
-    size=$(basename "$(dirname "$(dirname "$icon")")")
-    install -Dm644 "$icon" \
-        %{buildroot}%{_datadir}/icons/hicolor/$size/apps/%{name}.png
-done
-
-# Pixmaps fallback
-install -Dm644 packaging/hicolor/256x256/apps/%{name}.png \
-    %{buildroot}%{_datadir}/pixmaps/lgl-scheduler-manager.png
-
-# AppStream metainfo
-install -Dm644 packaging/com.linuxgamerlife.lgl-scheduler-manager.metainfo.xml \
-    %{buildroot}%{_datadir}/metainfo/com.linuxgamerlife.lgl-scheduler-manager.metainfo.xml
-
-%post
-if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    gtk-update-icon-cache -f -t %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-if [ -x /usr/bin/update-desktop-database ]; then
-    update-desktop-database -q %{_datadir}/applications &>/dev/null || :
-fi
-if [ -x /usr/bin/appstreamcli ]; then
-    appstreamcli refresh --force &>/dev/null || :
-fi
-if [ -x /usr/bin/kbuildsycoca6 ]; then
-    kbuildsycoca6 &>/dev/null || :
-fi
-
-%postun
-if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    gtk-update-icon-cache -f -t %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-if [ -x /usr/bin/update-desktop-database ]; then
-    update-desktop-database -q %{_datadir}/applications &>/dev/null || :
-fi
-if [ -x /usr/bin/appstreamcli ]; then
-    appstreamcli refresh --force &>/dev/null || :
-fi
+%cmake_install
+desktop-file-validate %{buildroot}%{_datadir}/applications/com.linuxgamerlife.lgl-scheduler-manager.desktop
+appstreamcli validate --no-net %{buildroot}%{_datadir}/metainfo/com.linuxgamerlife.lgl-scheduler-manager.metainfo.xml
 
 %files
 %license LICENSE
-%doc README.md CHANGELOG.md
+%doc README.md CHANGELOG.md HELP.md
 %{_bindir}/lgl-scheduler-manager
-%{_datadir}/applications/lgl-scheduler-manager.desktop
-%{_datadir}/icons/hicolor/*/apps/lgl-scheduler-manager.png
-%{_datadir}/pixmaps/lgl-scheduler-manager.png
+%{_datadir}/applications/com.linuxgamerlife.lgl-scheduler-manager.desktop
 %{_datadir}/metainfo/com.linuxgamerlife.lgl-scheduler-manager.metainfo.xml
+%{_datadir}/icons/hicolor/48x48/apps/lgl-scheduler-manager.png
+%{_datadir}/icons/hicolor/48x48/apps/lgl-scheduler-manager-unknown.png
+%{_datadir}/icons/hicolor/48x48/apps/lgl-scheduler-manager-running.png
+%{_datadir}/icons/hicolor/48x48/apps/lgl-scheduler-manager-stopped.png
+%{_datadir}/icons/hicolor/64x64/apps/lgl-scheduler-manager.png
+%{_datadir}/icons/hicolor/128x128/apps/lgl-scheduler-manager.png
+%{_datadir}/icons/hicolor/256x256/apps/lgl-scheduler-manager.png
 
 %changelog
-* Wed Oct 14 2026 LinuxGamerLife <contact@linuxgamerlife.com> - 1.1.1-2
+* Wed Oct 21 2026 LinuxGamerLife <222456170+linuxgamerlife@users.noreply.github.com> - 2.0.0-1
+- Release the completed GTK 4 application as version 2.0.0
+- Publish through the LGL Toolkit COPR
+- Add copyable custom-flag syntax, tray menu synchronization, and menu keyboard toggles
+- Fix DBusMenu GVariant ownership and release cancelled tray actions
+- Reject embedded NUL bytes in custom scheduler flags
+- Document the known KWin close-button workaround
+
+* Wed Oct 21 2026 LinuxGamerLife <222456170+linuxgamerlife@users.noreply.github.com> - 1.2.0-7
+- Inset window controls to keep the close button outside the compositor resize corner
+
+* Wed Oct 21 2026 LinuxGamerLife <222456170+linuxgamerlife@users.noreply.github.com> - 1.2.0-6
+- Recreate the main-menu popover after tray restoration
+- Use native hide-on-close and rebuild the window surface when hidden
+- Make F10 and Alt toggle the main menu from both the window and popover
+
+* Wed Oct 21 2026 LinuxGamerLife <222456170+linuxgamerlife@users.noreply.github.com> - 1.2.0-5
+- Restore primary-menu input and defer tray close hiding until GTK completes the event
+
+* Wed Oct 21 2026 LinuxGamerLife <222456170+linuxgamerlife@users.noreply.github.com> - 1.2.0-4
+- Use the repository GitHub address in package metadata
+
+* Wed Oct 21 2026 LinuxGamerLife <222456170+linuxgamerlife@users.noreply.github.com> - 1.2.0-3
+- Use GTK's native hide-on-close lifecycle for reliable tray restoration
+
+* Wed Oct 21 2026 LinuxGamerLife <222456170+linuxgamerlife@users.noreply.github.com> - 1.2.0-2
+- Fix tray menu activation and window restoration input handling
+- Add copyable custom-flag syntax reference
+
+* Wed Oct 21 2026 LinuxGamerLife <222456170+linuxgamerlife@users.noreply.github.com> - 1.2.0-1
+- Migrate the maintained application from Qt 6 to GTK 4
+- Add standard LGL theming, title bars, menu, shortcuts, help, settings, and tests
+
+* Wed Oct 14 2026 LinuxGamerLife <222456170+linuxgamerlife@users.noreply.github.com> - 1.1.1-2
 - Fix the version shown in the About dialog
-
-* Wed Oct 14 2026 LinuxGamerLife <contact@linuxgamerlife.com> - 1.1.1-1
-- Add --start-minimized for desktop-session autostart
-
-* Sun Sep 20 2026 LinuxGamerLife <contact@linuxgamerlife.com> - 1.1.0-1
-- Project renamed from lgl-scxctl-manager to lgl-scheduler-manager
-- New hicolor icon set; tray icon is now the app icon with a status badge
-- Reference tab ordered to match the scheduler dropdowns
-- Fix: only one instance of the app can run at a time
-- Fix: clicking the tray icon shows/hides the window
-
-* Sat Apr 25 2026 LinuxGamerLife <contact@linuxgamerlife.com> - 1.0.1-1
-- Closing the main window now minimises to system tray instead of quitting
-
-* Mon Mar 23 2026 LinuxGamerLife <contact@linuxgamerlife.com> - 1.0.0-1
-- Initial release
