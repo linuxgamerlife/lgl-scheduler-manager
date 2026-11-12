@@ -104,6 +104,32 @@ Future releases will then be installed through normal Fedora system updates.
 RPM release artifacts are also available from
 [GitHub Releases](https://github.com/linuxgamerlife/lgl-scheduler-manager/releases).
 
+### NixOS
+
+The repository is a flake. Run it without installing:
+
+```bash
+nix run github:linuxgamerlife/lgl-scheduler-manager
+```
+
+To install it system-wide, add the flake as an input and use its overlay:
+
+```nix
+# flake.nix
+inputs.lgl-scheduler-manager.url = "github:linuxgamerlife/lgl-scheduler-manager";
+```
+
+```nix
+# configuration.nix
+nixpkgs.overlays = [ inputs.lgl-scheduler-manager.overlays.default ];
+environment.systemPackages = [ pkgs.lgl-scheduler-manager ];
+```
+
+Without an overlay, use the package directly:
+`inputs.lgl-scheduler-manager.packages.${pkgs.system}.default`. `scxctl`,
+`pkexec`, and `systemctl` are resolved from PATH at runtime, so the scheduler
+tools and Polkit must already be installed on the system.
+
 The project can also be built directly from source.
 
 ---
