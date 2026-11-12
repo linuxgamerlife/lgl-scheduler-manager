@@ -130,6 +130,27 @@ Without an overlay, use the package directly:
 `pkexec`, and `systemctl` are resolved from PATH at runtime, so the scheduler
 tools and Polkit must already be installed on the system.
 
+Install the scheduler tools declaratively. The Fedora `scx-tools` and
+`scx-scheds` packages correspond to `scx-loader` (which provides `scxctl` and
+`scx_loader.service`) and `scx.rustscheds` or `scx.full` (the scheduler
+binaries) on NixOS:
+
+```nix
+# configuration.nix
+services.scx-loader = {
+  enable = true;
+  schedsPackages = [ pkgs.scx.full ]; # or [ pkgs.scx.rustscheds ]
+  config.default_sched = "scx_bpfland"; # optional
+};
+```
+
+Then apply the configuration with `sudo nixos-rebuild switch`. This installs
+`scxctl` and the schedulers system-wide and enables `scx_loader.service` with
+its D-Bus and Polkit integration. A kernel version 6.12 or newer with
+`sched_ext` support is required; use
+`boot.kernelPackages = pkgs.linuxPackages_latest;` if your current kernel is
+older.
+
 The project can also be built directly from source.
 
 ---
