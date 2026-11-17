@@ -10,6 +10,7 @@
 #include <cctype>
 #include <chrono>
 #include <ctime>
+#include <fstream>
 #include <iomanip>
 #include <sstream>
 #include <utility>
@@ -182,6 +183,39 @@ std::string timestamp() {
     return stream.str();
 }
 
+bool fedora_based() {
+    std::ifstream release("/etc/os-release");
+    if (!release) {
+        return false;
+    }
+
+    std::string line;
+    while (std::getline(release, line)) {
+        const auto separator = line.find('=');
+        if (separator == std::string::npos) {
+            continue;
+        }
+        const std::string key = line.substr(0, separator);
+        if (key != "ID" && key != "ID_LIKE") {
+            continue;
+        }
+
+        std::string value = line.substr(separator + 1);
+        if (value.size() >= 2 && value.front() == value.back() &&
+            (value.front() == '"' || value.front() == '\'')) {
+            value = value.substr(1, value.size() - 2);
+        }
+        std::istringstream tokens(value);
+        std::string token;
+        while (tokens >> token) {
+            if (token == "fedora") {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 } // namespace
 
 Window::Window(const Glib::RefPtr<Gtk::Application>& application, const bool start_minimized)
@@ -326,8 +360,11 @@ Gtk::Widget& Window::build_status_page() {
     auto* tools_grid = Gtk::make_managed<Gtk::Grid>();
     tools_grid->set_row_spacing(10);
     tools_grid->set_column_spacing(12);
-    add_info_row(*tools_grid, 0, "COPR (kernel-cachyos-addons)", copr_value_);
-    add_info_row(*tools_grid, 1, "scx-tools installed", tools_value_);
+    int row = 0;
+    if (fedora_based()) {
+        add_info_row(*tools_grid, row++, "COPR (kernel-cachyos-addons)", copr_value_);
+    }
+    add_info_row(*tools_grid, row, "scx-tools installed", tools_value_);
     bool copr_enabled = false;
     const std::filesystem::path repositories{"/etc/yum.repos.d"};
     if (std::filesystem::is_directory(repositories)) {
@@ -459,6 +496,23 @@ Gtk::Widget& Window::build_setup_page() {
     text->add_css_class("mono");
     card.append(*text);
     body->append(card);
+
+    auto& nixos = make_card("NIXOS SETUP");
+    auto* nixos_text = Gtk::make_managed<Gtk::Label>(
+        "Add this to configuration.nix:\n\n"
+        "services.scx-loader = {\n"
+        "  enable = true;\n"
+        "  schedsPackages = [ pkgs.scx.full ]; # or [ pkgs.scx.rustscheds ]\n"
+        "};\n\n"
+        "Then run:\n"
+        "sudo nixos-rebuild switch\n\n"
+        "A kernel 6.12 or newer with sched_ext support is required.");
+    nixos_text->set_wrap(true);
+    nixos_text->set_selectable(true);
+    nixos_text->set_halign(Gtk::Align::START);
+    nixos_text->add_css_class("mono");
+    nixos.append(*nixos_text);
+    body->append(nixos);
     return *body;
 }
 
